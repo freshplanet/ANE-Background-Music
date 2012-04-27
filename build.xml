@@ -1,0 +1,89 @@
+<!--
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright 2012 Freshplanet (http://freshplanet.com | opensource@freshplanet.com)
+//  
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//  
+//    http://www.apache.org/licenses/LICENSE-2.0
+//  
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//  
+//////////////////////////////////////////////////////////////////////////////////////
+-->
+
+<project name="AirBackgroundMusic" basedir="." default="compile">
+	<property name="build" value="Binaries"/>
+	<property name="lib.a" value="NativeIOS/build/Debug-iphoneos/libAirBackgroundMusic.a"/>
+	<property name="lib.swc" value="AS/bin/AirBackgroundMusic.swc"/>
+	<property name="extension.xml" value="AS/src/extension.xml"/>
+	<property name="aneName.ane" value="AirBackgroundMusic.ane"/>
+	<property name="iOSPlatformOptions" value="NativeIOS/platform.xml"/>
+	<property name="adt.jar" value="/Applications/Adobe Flash Builder 4.6/sdks/4.6.0/lib/adt.jar"/>
+	
+	<target name="clean">
+		<delete dir="${build}"/>
+	</target>
+
+	<target name="init" depends="clean">
+		<mkdir dir="${build}"/>
+		<mkdir dir="${build}/Android"/>
+		<mkdir dir="${build}/Default"/>
+		<mkdir dir="${build}/iOS"/>
+	</target>	
+
+	<target name="copyIOS" depends="init">
+		<copy file="${lib.a}" todir="${build}/iOS"/>
+	</target>	
+
+	<target name="unzipSwf" depends="copyIOS">
+	        <mkdir dir="temp"/>
+		<unzip src="${lib.swc}" dest="temp"/>
+		<copy file="temp/library.swf" todir="${build}/Android"/>
+		<copy file="temp/library.swf" todir="${build}/Default"/>
+		<copy file="temp/library.swf" todir="${build}/iOS"/>
+		<delete dir="temp"/>
+	</target>	
+
+
+	<target name="compile" depends="unzipSwf">
+		<java jar="${adt.jar}" fork="true" failonerror="true">
+			<arg value="-package"/>
+			<arg value="-target"/>
+			<arg value="ane"/>
+			<arg value="Binaries/${aneName.ane}"/>
+			<arg value="${extension.xml}"/>
+			
+			<arg value="-swc"/>
+			<arg value="${lib.swc}"/>
+			
+			<arg value="-platform"/> 
+			<arg value="Android-ARM"/>
+			<arg value="-C"/>
+			<arg value="${build}/Android"/>
+			<arg value="library.swf"/>
+			
+			<arg value="-platform"/>
+			<arg value="iPhone-ARM"/>
+			<arg value="-platformoptions"/>
+			<arg value="${iOSPlatformOptions}"/>
+			<arg value="-C"/>
+			<arg value="${build}/iOS"/>
+			<arg value="."/>
+			
+			<arg value="-platform"/>
+			<arg value="default"/>
+			<arg value="-C"/>
+			<arg value="${build}/Default"/>
+			<arg value="library.swf"/>
+		</java>
+	</target>
+
+</project>
+        
