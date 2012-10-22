@@ -1,5 +1,4 @@
-<!--
-//////////////////////////////////////////////////////////////////////////////////////
+<!--//////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright 2012 Freshplanet (http://freshplanet.com | opensource@freshplanet.com)
 //  
@@ -15,25 +14,27 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //  
-//////////////////////////////////////////////////////////////////////////////////////
--->
+//////////////////////////////////////////////////////////////////////////////////////-->
 
 <extension xmlns="http://ns.adobe.com/air/extension/3.1">
-  <id>com.freshplanet.AirBackgroundMusic</id>
+  <id>com.freshplanet.ane.AirBackgroundMusic</id>
   <versionNumber>1</versionNumber>
   <platforms>
     <platform name="iPhone-ARM">
             <applicationDeployment>
                 <nativeLibrary>libAirBackgroundMusic.a</nativeLibrary>
-                <initializer>AirBgMusicInitializer</initializer> 
+                <initializer>AirBackgroundMusicExtInitializer</initializer>
+                <finalizer>AirBackgroundMusicExtFinalizer</finalizer>
             </applicationDeployment>
     </platform>
-    
     <platform name="Android-ARM"> 
-        <applicationDeployment/> 
-    </platform>
+        <applicationDeployment> 
+            <nativeLibrary>libAirBackgroundMusic.jar</nativeLibrary> 
+            <initializer>com.freshplanet.ane.AirBackgroundMusic.AirBackgroundMusicExtension</initializer> 
+            <finalizer>com.freshplanet.ane.AirBackgroundMusic.AirBackgroundMusicExtension</finalizer> 
+        </applicationDeployment> 
+    </platform> 
     
-     
     <platform name="default"> 
         <applicationDeployment/> 
     </platform> 
